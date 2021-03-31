@@ -26,7 +26,12 @@ class TimeWidget : AppWidgetProvider() {
         StrictMode.setThreadPolicy(policy)
         val url = URL("http://www.google.de/")
         val urlConnection: HttpURLConnection = url.openConnection() as HttpURLConnection
-        val currentDate = Date(urlConnection.date)
+        val currentDate: Date
+        try {
+            currentDate = Date(urlConnection.date)
+        } finally {
+            urlConnection.disconnect()
+        }
         // There may be multiple widgets active, so update all of them
         for (appWidgetId in appWidgetIds) {
             updateAppWidget(context, appWidgetManager, appWidgetId, currentDate)
